@@ -9,14 +9,14 @@ def SellBids(o):
     s = []
     for i in o["bids"]:
         s.append((i["price"], i["quantity"]))
-    return max(s)
+    return min(s)
 
 
 def BuyBids(o):
     s = []
     for i in o["bids"]:
         s.append((i["price"], i["quantity"]))
-    return min(s)
+    return max(s)
 
 
 class Marketplace:
@@ -72,25 +72,27 @@ class Marketplace:
         return requests.get(url=url, headers=header).json()
 
     # return all aplication where bind noot empty, sorted by max(price)
-    def buyApplication(self):
+    def buyApplication(self, s):
         url = "https://datsorange.devteam.games/buyStock"
         header = {"token": self.token}
         arr = requests.get(url=url, headers=header).json()
         listApplication = []
         for i in arr:
             if i["bids"]:
-                listApplication.append(i)
+                if len(s) == 0 or i["ticker"] in s:
+                    listApplication.append(i)
         listApplication.sort(key=SellBids)
         return listApplication
 
-    def sellApplication(self):
+    def sellApplication(self, s):
         url = "https://datsorange.devteam.games/sellStock"
         header = {"token": self.token}
         arr = requests.get(url=url, headers=header).json()
         listApplication = []
         for i in arr:
             if i["bids"]:
-                listApplication.append(i)
+                if len(s) == 0 or i["ticker"] in s:
+                    listApplication.append(i)
         listApplication.sort(key=BuyBids)
         return listApplication
 
