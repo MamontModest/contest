@@ -63,14 +63,7 @@ class Marketplace:
     def newsLast(self):
         url = "https://datsorange.devteam.games/news/LatestNews"
         header = {"token": self.token}
-        news = requests.get(url=url, headers=header).json()
-        s = {"positive": [], "negative": []}
-        for i in news:
-            if i["rate"] > 0:
-                s["positive"].append(i)
-            else:
-                s["negative"].append(i)
-        return s
+        return requests.get(url=url, headers=header).json()
 
     # return all assets
     def assets(self):
